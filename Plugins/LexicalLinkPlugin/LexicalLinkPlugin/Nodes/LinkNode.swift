@@ -79,7 +79,7 @@ open class LinkNode: ElementNode {
       return [:]
     }
 
-    var attribs: [NSAttributedString.Key: Any] = theme.link ?? [:]
+    var attribs: [NSAttributedString.Key: Any] = theme.link
     attribs[.link] = url
     return attribs
   }
@@ -92,5 +92,16 @@ open class LinkNode: ElementNode {
     }
 
     return nil
+  }
+}
+
+fileprivate struct LinkThemeKey: ThemeKey {
+  static var defaultValue: Theme.AttributeDict = [.foregroundColor: UIColor.blue]
+}
+
+public extension Theme {
+  var link: AttributeDict {
+    get { self[LinkThemeKey.self] }
+    set { self[LinkThemeKey.self] = newValue }
   }
 }

@@ -302,12 +302,7 @@ open class TextNode: Node {
     }
 
     if format.code {
-      if let themeDict = theme.getValue(.text, withSubtype: TextNodeThemeSubtype.code) {
-        attributeDictionary.merge(themeDict) { (_, new) in new }
-      } else {
-        attributeDictionary[NSAttributedString.Key.fontFamily] = "Courier"
-        attributeDictionary[NSAttributedString.Key.backgroundColor] = UIColor.lightGray
-      }
+      attributeDictionary.merge(theme.inlineCode) { (_, new) in new }
     }
 
     return attributeDictionary
@@ -741,5 +736,31 @@ extension TextNode {
         UIRectFill(rect)
       }
     }
+  }
+}
+
+fileprivate struct TextThemeKey: ThemeKey {
+  static var defaultValue: Theme.AttributeDict = [
+    :]
+}
+
+public extension Theme {
+  var text: AttributeDict {
+    get { self[TextThemeKey.self] }
+    set { self[TextThemeKey.self] = newValue }
+  }
+}
+
+fileprivate struct InlineCodeThemeKey: ThemeKey {
+  static var defaultValue: Theme.AttributeDict = [
+    .fontFamily: "Courier",
+    .backgroundColor: UIColor.lightGray
+  ]
+}
+
+public extension Theme {
+  var inlineCode: AttributeDict {
+    get { self[InlineCodeThemeKey.self] }
+    set { self[InlineCodeThemeKey.self] = newValue }
   }
 }

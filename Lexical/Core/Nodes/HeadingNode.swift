@@ -70,15 +70,15 @@ public class HeadingNode: ElementNode {
   override public func getAttributedStringAttributes(theme: Theme) -> [NSAttributedString.Key: Any] {
     switch tag {
     case .h1:
-      return theme.getValue(.heading, withSubtype: "h1") ?? [.fontSize: HeadingDefaultFontSize.h1.rawValue]
+      return theme.heading1
     case .h2:
-      return theme.getValue(.heading, withSubtype: "h2") ?? [.fontSize: HeadingDefaultFontSize.h2.rawValue]
+      return theme.heading2
     case .h3:
-      return theme.getValue(.heading, withSubtype: "h3") ?? [.fontSize: HeadingDefaultFontSize.h3.rawValue]
+      return theme.heading3
     case .h4:
-      return theme.getValue(.heading, withSubtype: "h4") ?? [.fontSize: HeadingDefaultFontSize.h4.rawValue]
+      return theme.heading4
     case .h5:
-      return theme.getValue(.heading, withSubtype: "h5") ?? [.fontSize: HeadingDefaultFontSize.h5.rawValue]
+      return theme.heading5
     }
   }
 
@@ -104,4 +104,52 @@ public class HeadingNode: ElementNode {
 
     return true
   }
+}
+
+fileprivate struct Heading1ThemeKey: ThemeKey {
+    static let defaultValue: Theme.AttributeDict = [.fontSize: HeadingDefaultFontSize.h1.rawValue]
+}
+
+fileprivate struct Heading2ThemeKey: ThemeKey {
+    static let defaultValue: Theme.AttributeDict = [.fontSize: HeadingDefaultFontSize.h2.rawValue]
+}
+
+fileprivate struct Heading3ThemeKey: ThemeKey {
+    static let defaultValue: Theme.AttributeDict = [.fontSize: HeadingDefaultFontSize.h3.rawValue]
+}
+
+fileprivate struct Heading4ThemeKey: ThemeKey {
+    static let defaultValue: Theme.AttributeDict = [.fontSize: HeadingDefaultFontSize.h4.rawValue]
+}
+
+fileprivate struct Heading5ThemeKey: ThemeKey {
+    static let defaultValue: Theme.AttributeDict = [.fontSize: HeadingDefaultFontSize.h5.rawValue]
+}
+
+
+public extension Theme {
+    var heading1: AttributeDict {
+        get { self[Heading1ThemeKey.self] }
+        set { self[Heading1ThemeKey.self] = newValue }
+    }
+
+    var heading2: AttributeDict {
+        get { self[Heading2ThemeKey.self] }
+        set { self[Heading2ThemeKey.self] = newValue }
+    }
+
+    var heading3: AttributeDict {
+        get { self[Heading3ThemeKey.self] }
+        set { self[Heading3ThemeKey.self] = newValue }
+    }
+
+    var heading4: AttributeDict {
+        get { self[Heading4ThemeKey.self] }
+        set { self[Heading4ThemeKey.self] = newValue }
+    }
+
+    var heading5: AttributeDict {
+        get { self[Heading5ThemeKey.self] }
+        set { self[Heading5ThemeKey.self] = newValue }
+    }
 }

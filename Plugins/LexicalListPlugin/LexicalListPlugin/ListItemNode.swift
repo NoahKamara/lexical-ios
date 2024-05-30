@@ -250,7 +250,7 @@ public class ListItemNode: ElementNode {
     let node: ListItemNode = getLatest()
     let listNode = node.getParent() as? ListNode
 
-    var attributes: [NSAttributedString.Key: Any] = theme.listItem ?? [:]
+    var attributes: [NSAttributedString.Key: Any] = theme.listItem
     attributes[.paddingHead] = attributes[.paddingHead] ?? theme.indentSize
 
     if node.getChildren().first is ListNode {
@@ -297,4 +297,14 @@ public class ListItemNode: ElementNode {
 
     return attributes
   }
+}
+
+
+fileprivate struct ListItemThemeKey: ThemeKey {}
+
+public extension Theme {
+    var listItem: AttributeDict {
+        get { self[ListItemThemeKey.self] }
+        set { self[ListItemThemeKey.self] = newValue }
+    }
 }

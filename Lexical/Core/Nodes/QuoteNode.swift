@@ -29,7 +29,7 @@ public class QuoteNode: ElementNode {
   }
 
   override public func getAttributedStringAttributes(theme: Theme) -> [NSAttributedString.Key: Any] {
-    theme.quote ?? [:]
+    theme.quote
   }
 
   override public func getIndent() -> Int {
@@ -107,5 +107,14 @@ extension QuoteNode {
         }
       }
     }
+  }
+}
+
+fileprivate struct QuoteThemeKey: ThemeKey {}
+
+public extension Theme {
+  var quote: AttributeDict {
+    get { self[QuoteThemeKey.self] }
+    set { self[QuoteThemeKey.self] = newValue }
   }
 }

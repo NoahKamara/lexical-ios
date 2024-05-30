@@ -26,8 +26,8 @@ import UIKit
       return false
     }
     return lhs.background == rhs.background &&
-      lhs.border == rhs.border &&
-      lhs.borderWidth == rhs.borderWidth
+    lhs.border == rhs.border &&
+    lhs.borderWidth == rhs.borderWidth
   }
 }
 
@@ -100,13 +100,7 @@ public class CodeNode: ElementNode {
 
   override public func getAttributedStringAttributes(theme: Theme) -> [NSAttributedString.Key: Any] {
     var attributeDictionary = super.getAttributedStringAttributes(theme: theme)
-    if let codeTheme = theme.code {
-      attributeDictionary.merge(codeTheme) { (_, new) in new }
-    } else {
-      // a few defaults
-      attributeDictionary[.paddingHead] = 4.0
-      attributeDictionary[.paddingTail] = -4.0
-    }
+    attributeDictionary.merge(theme.code) { (_, new) in new }
 
     if attributeDictionary[.codeBlockCustomDrawing] == nil {
       let customAttr = CodeBlockCustomDrawingAttributes(background: .lightGray, border: .gray, borderWidth: 1)
@@ -153,5 +147,19 @@ extension CodeNode {
         context.stroke(rect, width: attributeValue.borderWidth)
       }
     }
+  }
+}
+
+fileprivate struct CodeThemeKey: ThemeKey {
+  static var defaultValue: Theme.AttributeDict = [
+    .paddingHead: 4.0,
+    .paddingTail: -4.0
+  ]
+}
+
+public extension Theme {
+  var code: AttributeDict {
+    get { self[CodeThemeKey.self] }
+    set { self[CodeThemeKey.self] = newValue }
   }
 }

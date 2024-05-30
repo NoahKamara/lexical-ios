@@ -7,6 +7,14 @@
 
 import Foundation
 
+public protocol ThemeKey {
+    static var defaultValue: Theme.AttributeDict { get }
+}
+
+public extension ThemeKey {
+    static var defaultValue: Theme.AttributeDict { [:] }
+}
+
 /**
  Provides styling information for Lexical nodes.
 
@@ -47,18 +55,17 @@ import Foundation
  - ``Node/getAttributedStringAttributes(theme:)``
  - ``Node/getBlockLevelAttributes(theme:)``
  */
-@dynamicMemberLookup
 @objc open class Theme: NSObject {
   public typealias AttributeDict = [NSAttributedString.Key: Any]
-  private struct Key: Hashable, Equatable {
-    internal init(_ nodeType: NodeType, _ subkey: String? = nil) {
-      self.nodeType = nodeType
-      self.subkey = subkey
-    }
-
-    let nodeType: NodeType
-    let subkey: String?
-  }
+//  private struct Key: Hashable, Equatable {
+//    internal init(_ nodeType: NodeType, _ subkey: String? = nil) {
+//      self.nodeType = nodeType
+//      self.subkey = subkey
+//    }
+//
+//    let nodeType: NodeType
+//    let subkey: String?
+//  }
 
   /// The width in points of each indentation level.
   public var indentSize: Double = 40.0
@@ -67,27 +74,25 @@ import Foundation
   /// such as an ellipsis or "See More" or similar).
   public var truncationIndicatorAttributes: AttributeDict = [:]
 
-  private var attributes: [Key: AttributeDict] = [:]
+  private var attributes: [ObjectIdentifier: AttributeDict] = [:]
   private var blockLevelAttributes: [NodeType: BlockLevelAttributes] = [:]
 
-  public subscript(dynamicMember member: String) -> AttributeDict? {
-    get {
-      let nodeType: NodeType = NodeType(rawValue: member)
-      return attributes[Key(nodeType)]
+    public subscript<Key: ThemeKey>(_ key: Key.Type) -> AttributeDict {
+        get {
+            return attributes[ObjectIdentifier(key)] ?? Key.defaultValue
+        }
+        set {
+            attributes[ObjectIdentifier(key)] = newValue
+        }
     }
-    set {
-      let nodeType: NodeType = NodeType(rawValue: member)
-      attributes[Key(nodeType)] = newValue
-    }
-  }
 
-  public func getValue(_ nodeType: NodeType, withSubtype subtype: String?) -> AttributeDict? {
-    attributes[Key(nodeType, subtype)]
-  }
-
-  public func setValue(_ nodeType: NodeType, forSubtype subtype: String?, value: AttributeDict) {
-    attributes[Key(nodeType, subtype)] = value
-  }
+//  public func getValue(_ nodeType: NodeType, withSubtype subtype: String?) -> AttributeDict? {
+//    attributes[Key(nodeType, subtype)]
+//  }
+//
+//  public func setValue(_ nodeType: NodeType, forSubtype subtype: String?, value: AttributeDict) {
+//    attributes[Key(nodeType, subtype)] = value
+//  }
 
   public func getBlockLevelAttributes(_ nodeType: NodeType) -> BlockLevelAttributes? {
     blockLevelAttributes[nodeType]

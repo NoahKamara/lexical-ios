@@ -29,11 +29,7 @@ public class ParagraphNode: ElementNode {
   }
 
   override public func getAttributedStringAttributes(theme: Theme) -> [NSAttributedString.Key: Any] {
-    if let paragraph = theme.paragraph {
-      return paragraph
-    }
-
-    return [:]
+    theme.paragraph
   }
 
   override open func insertNewAfter(selection: RangeSelection?) throws -> ParagraphNode? {
@@ -50,5 +46,14 @@ public class ParagraphNode: ElementNode {
 
   public func createParagraphNode() -> ParagraphNode {
     return ParagraphNode()
+  }
+}
+
+fileprivate struct ParagraphThemeKey: ThemeKey {}
+
+public extension Theme {
+  var paragraph: AttributeDict {
+    get { self[ParagraphThemeKey.self] }
+    set { self[ParagraphThemeKey.self] = newValue }
   }
 }

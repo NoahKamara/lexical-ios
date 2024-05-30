@@ -26,11 +26,7 @@ public class RootNode: ElementNode {
   }
 
   override public func getAttributedStringAttributes(theme: Theme) -> [NSAttributedString.Key: Any] {
-    if let root = theme.root {
-      return root
-    }
-
-    return [.font: LexicalConstants.defaultFont]
+    theme.root
   }
 
   // Root nodes cannot have a preamble. If they did, there would be no way to make a selection of the
@@ -64,4 +60,15 @@ extension RootNode: CustomDebugStringConvertible {
   public var debugDescription: String {
     return "(RootNode: key '\(key)', id \(ObjectIdentifier(self))"
   }
+}
+
+fileprivate struct RootThemeKey: ThemeKey {
+  static var defaultValue: Theme.AttributeDict = [.font: LexicalConstants.defaultFont]
+}
+
+public extension Theme {
+    var root: AttributeDict {
+        get { self[RootThemeKey.self] }
+        set { self[RootThemeKey.self] = newValue }
+    }
 }
